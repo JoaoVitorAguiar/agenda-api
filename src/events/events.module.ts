@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EventSchema } from './schema/event.schema';
 import { EventController } from './events.controller';
 import { UsersModule } from 'src/users/users.module';
+import { EventCreatedListener } from './listeners/event-created.listener';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule,
   ],
   controllers: [EventController],
-  providers: [EventService],
+  providers: [EventService, EventCreatedListener],
 })
 export class EventsModule {}
