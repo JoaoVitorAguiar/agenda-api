@@ -6,7 +6,7 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { MailersModule } from './mailers/mailers.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { MailersModule } from './mailers/mailers.module';
     UsersModule,
     DatabaseModule,
     EventsModule,
-    MailersModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

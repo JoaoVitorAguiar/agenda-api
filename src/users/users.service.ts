@@ -1,7 +1,6 @@
-// src/users/users.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -30,5 +29,18 @@ export class UsersService {
 
   async delete(id: string): Promise<User> {
     return this.userModel.findByIdAndDelete(id).exec();
+  }
+
+  async findUsersByIds(ids: string[]): Promise<User[]> {
+    // Verifica se todos os IDs são válidos
+    const validIds = ids.filter((id) => Types.ObjectId.isValid(id));
+    if (validIds.length === 0) {
+      return []; // Se nenhum ID é válido, retorna um array vazio
+    }
+
+    // Busca usuários com os IDs válidos
+    return this.userModel
+      .find({ _id: { $in: validIds.map((id) => new Types.ObjectId(id)) } })
+      .exec();
   }
 }

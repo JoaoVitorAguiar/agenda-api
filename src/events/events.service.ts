@@ -16,9 +16,10 @@ export class EventService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
-    const { title, description, emails } = createEventDto;
-    const emailSet = new Set<string>();
+    const { title, description, emails, createdBy, date } = createEventDto;
 
+    // Filtrar e-mails únicos
+    const emailSet = new Set<string>();
     const uniqueEmails = emails.filter((email) => {
       if (emailSet.has(email)) {
         return false; // Ignora e-mails duplicados
@@ -32,22 +33,26 @@ export class EventService {
         this.userModel
           .findOne({ email })
           .exec()
-          .then((user) => (user ? user : null)),
+          .then((user) => user || null),
       ),
     );
 
     const validUsers = users.filter((user) => user !== null);
 
     const createdEvent = new this.eventModel({
-      ...createEventDto,
+      title,
+      description,
+      date: createEventDto.date,
       attendees: validUsers.map((user) => user._id),
+      createdBy: createEventDto.createdBy,
     });
     const savedEvent = await createdEvent.save();
 
-    // Emitir evento
+    // Emitir o evento
     const eventCreatedEvent = new EventCreatedEvent();
     eventCreatedEvent.name = title;
     eventCreatedEvent.description = description;
+    eventCreatedEvent.attendees = validUsers.map((user) => user.email); // Adiciona os e-mails dos participantes
     this.eventEmitter.emit('event.created', eventCreatedEvent);
 
     return savedEvent;
