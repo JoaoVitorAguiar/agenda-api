@@ -16,21 +16,49 @@ export class EventService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
-    const createdEvent = new this.eventModel(createEventDto);
+    const { title, description, emails } = createEventDto;
+    const emailSet = new Set<string>();
+
+    const uniqueEmails = emails.filter((email) => {
+      if (emailSet.has(email)) {
+        return false; // Ignora e-mails duplicados
+      }
+      emailSet.add(email);
+      return true;
+    });
+
+    const users = await Promise.all(
+      uniqueEmails.map((email) =>
+        this.userModel
+          .findOne({ email })
+          .exec()
+          .then((user) => (user ? user : null)),
+      ),
+    );
+
+    const validUsers = users.filter((user) => user !== null);
+
+    const createdEvent = new this.eventModel({
+      ...createEventDto,
+      attendees: validUsers.map((user) => user._id),
+    });
     const savedEvent = await createdEvent.save();
+
+    // Emitir evento
     const eventCreatedEvent = new EventCreatedEvent();
-    eventCreatedEvent.name = createEventDto.title;
-    eventCreatedEvent.description = createEventDto.description;
+    eventCreatedEvent.name = title;
+    eventCreatedEvent.description = description;
     this.eventEmitter.emit('event.created', eventCreatedEvent);
+
     return savedEvent;
   }
 
   async addAttendee(addAttendeeDto: AddAttendeeDto): Promise<Event> {
-    const { eventId, userId } = addAttendeeDto;
+    const { eventId, email } = addAttendeeDto;
     return this.eventModel
       .findByIdAndUpdate(
         eventId,
-        { $push: { attendees: userId } },
+        { $addToSet: { attendees: email } }, // Usa $addToSet para garantir unicidade
         { new: true },
       )
       .exec();

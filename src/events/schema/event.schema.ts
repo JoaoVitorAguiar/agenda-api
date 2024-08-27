@@ -16,7 +16,13 @@ export class Event extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   createdBy: User;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'User' }],
+    set: (attendees: Types.ObjectId[]) =>
+      Array.from(new Set(attendees.map((id) => id.toString()))).map(
+        (id) => new Types.ObjectId(id),
+      ),
+  })
   attendees: User[];
 }
 

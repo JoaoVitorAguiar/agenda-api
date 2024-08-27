@@ -5,6 +5,8 @@ import {
   IsString,
   IsDate,
   IsMongoId,
+  IsArray,
+  ArrayNotEmpty,
 } from 'class-validator';
 
 export class CreateEventDto {
@@ -24,4 +26,9 @@ export class CreateEventDto {
   @IsNotEmpty({ message: 'CreatedBy is required' })
   @IsMongoId({ message: 'CreatedBy must be a valid MongoDB ID' })
   createdBy: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  emails: Array<string>;
 }

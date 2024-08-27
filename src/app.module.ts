@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MailersModule } from './mailers/mailers.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
