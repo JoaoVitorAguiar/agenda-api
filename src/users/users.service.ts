@@ -31,14 +31,15 @@ export class UsersService {
     return this.userModel.findByIdAndDelete(id).exec();
   }
 
+  async findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
+  }
+
   async findUsersByIds(ids: string[]): Promise<User[]> {
-    // Verifica se todos os IDs são válidos
     const validIds = ids.filter((id) => Types.ObjectId.isValid(id));
     if (validIds.length === 0) {
-      return []; // Se nenhum ID é válido, retorna um array vazio
+      return [];
     }
-
-    // Busca usuários com os IDs válidos
     return this.userModel
       .find({ _id: { $in: validIds.map((id) => new Types.ObjectId(id)) } })
       .exec();
