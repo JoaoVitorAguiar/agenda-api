@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/users/schema/user.schema';
@@ -6,6 +10,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { AddAttendeeDto } from './dto/add-attendee.sto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventCreatedEvent } from './events/event-created.event';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class EventService {
@@ -13,10 +18,16 @@ export class EventService {
     @InjectModel(Event.name) private eventModel: Model<Event>,
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly userServie: UsersService,
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { title, description, emails, createdBy, date } = createEventDto;
+
+    if (!createdBy) throw new BadRequestException('Autor não informado');
+    const author = await this.userServie.findOne(createdBy);
+
+    if (!author) throw new NotFoundException('Usuário não encontrado');
 
     // Filtrar e-mails únicos
     const emailSet = new Set<string>();
@@ -42,9 +53,9 @@ export class EventService {
     const createdEvent = new this.eventModel({
       title,
       description,
-      date: createEventDto.date,
+      date: date,
       attendees: validUsers.map((user) => user._id),
-      createdBy: createEventDto.createdBy,
+      createdBy: author.id,
     });
     const savedEvent = await createdEvent.save();
 

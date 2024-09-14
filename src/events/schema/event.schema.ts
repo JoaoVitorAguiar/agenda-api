@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { User } from 'src/users/schema/user.schema';
 
 @Schema()
 export class Event extends Document {
@@ -14,7 +13,7 @@ export class Event extends Document {
   date: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  createdBy: User;
+  createdBy: Types.ObjectId;
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'User' }],
@@ -23,7 +22,7 @@ export class Event extends Document {
         (id) => new Types.ObjectId(id),
       ),
   })
-  attendees: User[];
+  attendees: Types.ObjectId[];
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

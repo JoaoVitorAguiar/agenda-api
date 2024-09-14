@@ -25,7 +25,8 @@ export class CreateEventDto {
 
   @IsNotEmpty({ message: 'CreatedBy is required' })
   @IsMongoId({ message: 'CreatedBy must be a valid MongoDB ID' })
-  createdBy: string;
+  @IsOptional()
+  createdBy?: string;
 
   @IsArray()
   @ArrayNotEmpty()
