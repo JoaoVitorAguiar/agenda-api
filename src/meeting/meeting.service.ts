@@ -11,7 +11,7 @@ import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { AddAttendeeDto } from './dto/add-attendee.sto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UsersService } from 'src/users/users.service';
-import { CreateMeetingEvent } from './events/event-created.event';
+import { CreateMeetingEvent } from './events/meeting-created.event';
 
 @Injectable()
 export class MeetingService {
@@ -65,7 +65,7 @@ export class MeetingService {
     createMeetingEvent.name = title;
     createMeetingEvent.description = description;
     createMeetingEvent.attendees = validUsers.map((user) => user.email); // Adiciona os e-mails dos participantes
-    this.eventEmitter.emit('event.created', createMeetingEvent);
+    this.eventEmitter.emit('meeting.created', createMeetingEvent);
 
     return savedMeeting;
   }

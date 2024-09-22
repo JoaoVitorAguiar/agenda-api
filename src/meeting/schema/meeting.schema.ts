@@ -15,14 +15,11 @@ export class Meeting extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   createdBy: Types.ObjectId;
 
-  @Prop({
-    type: [{ type: Types.ObjectId, ref: 'User' }],
-    set: (attendees: Types.ObjectId[]) =>
-      Array.from(new Set(attendees.map((id) => id.toString()))).map(
-        (id) => new Types.ObjectId(id),
-      ),
-  })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
   attendees: Types.ObjectId[];
+
+  @Prop({ default: false })
+  reminderSent: boolean;
 }
 
 export const MeetingSchema = SchemaFactory.createForClass(Meeting);
