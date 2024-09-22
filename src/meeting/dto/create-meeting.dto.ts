@@ -9,7 +9,7 @@ import {
   ArrayNotEmpty,
 } from 'class-validator';
 
-export class CreateEventDto {
+export class CreateMeetingDto {
   @IsNotEmpty({ message: 'Title is required' })
   @IsString({ message: 'Title must be a string' })
   title: string;

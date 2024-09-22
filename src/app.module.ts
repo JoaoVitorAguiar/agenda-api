@@ -4,11 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
-import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { TaskModule } from './task/task.module';
+import { MeetingModule } from './meeting/meeting.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { TaskModule } from './task/task.module';
     EventEmitterModule.forRoot(),
     UsersModule,
     DatabaseModule,
-    EventsModule,
+    MeetingModule,
     EmailModule,
     AuthModule,
     TaskModule,

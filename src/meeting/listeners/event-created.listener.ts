@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { EmailService } from 'src/email/email.service';
 import { OnEvent } from '@nestjs/event-emitter';
-import { EventCreatedEvent } from '../events/event-created.event';
+import { CreateMeetingEvent } from '../events/event-created.event';
 
 @Injectable()
 export class EventCreatedListener {
   constructor(private readonly emailService: EmailService) {}
   @OnEvent('event.created')
-  async handleEventCreatedEvent(event: EventCreatedEvent) {
+  async handleEventCreatedEvent(event: CreateMeetingEvent) {
     await this.emailService.sendMail({
       to: event.attendees,
       subject: 'New Event Created',
