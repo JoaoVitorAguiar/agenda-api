@@ -12,7 +12,13 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000);
+  app.enableCors({
+    origin: '*', // Permitir qualquer origem
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
+    allowedHeaders: 'Content-Type, Authorization', // Cabeçalhos permitidos
+  });
+
+  await app.listen(3333);
   Logger.log(
     `Application is running on: ${await app.getUrl()}`,
     'NestApplication',

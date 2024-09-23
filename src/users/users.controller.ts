@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -35,5 +36,13 @@ export class UsersController {
     return {
       token,
     };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  async getAll() {
+    const users = await this.usersService.findAll();
+
+    return users;
   }
 }
