@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { Meeting } from 'src/meeting/schema/meeting.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User } from 'src/users/schema/user.schema';
