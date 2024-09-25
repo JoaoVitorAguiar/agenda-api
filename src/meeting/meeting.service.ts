@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from 'src/users/schema/user.schema';
 import { Meeting } from './schema/meeting.schema';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
@@ -87,6 +87,11 @@ export class MeetingService {
 
   async findByUserId(userId: string): Promise<Meeting[]> {
     return this.meetingModel.find({ createdBy: userId }).exec();
+  }
+
+  async findInvitedEventsByUserId(userId: string): Promise<Meeting[]> {
+    const objectId = new Types.ObjectId(userId); // Convertendo para ObjectId
+    return this.meetingModel.find({ attendees: objectId }).exec();
   }
   
 }

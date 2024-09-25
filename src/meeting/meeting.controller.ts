@@ -43,4 +43,12 @@
       const meetings = await this.meetingService.findByUserId(userId);
       return meetings
     }
+
+    @UseGuards(AuthGuard)
+    @Get('invited-meetings')
+    async findInvitedEvents(@Request() req) {
+      const userId = req.user.sub;
+      const meetings = await this.meetingService.findInvitedEventsByUserId(userId);
+      return meetings
+    } 
   }
