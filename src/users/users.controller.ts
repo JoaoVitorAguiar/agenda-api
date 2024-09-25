@@ -6,11 +6,14 @@ import {
   HttpStatus,
   UnauthorizedException,
   Get,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInDto } from 'src/auth/dtos/sign-in.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -44,5 +47,18 @@ export class UsersController {
     const users = await this.usersService.findAll();
 
     return users;
+  }
+
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Get('profile')
+  async profile(@Request() req,) {
+    const user_id = req.user.sub
+    const user = await this.usersService.findOne(user_id);
+
+    return {
+      ...user.toObject(), 
+      password: undefined, 
+    };
   }
 }
