@@ -84,4 +84,9 @@ export class MeetingService {
   async findAll(): Promise<Meeting[]> {
     return this.meetingModel.find().exec();
   }
+
+  async findByUserId(userId: string): Promise<Meeting[]> {
+    return this.meetingModel.find({ createdBy: userId }).exec();
+  }
+  
 }
